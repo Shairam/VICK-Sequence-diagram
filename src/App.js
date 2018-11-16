@@ -6,6 +6,8 @@ import $ from 'jquery';
 // import mermaid from './mermaid-1';
 //import mermaidAPI from "./mermaidAPI";
 import mermaid, {mermaidAPI} from 'mermaid';
+import jsonMainService from './resources/service-details';
+
 
 class App extends Component {
 
@@ -13,21 +15,33 @@ class App extends Component {
         super(props);
         this.state = {
             config : test
-        };
+        }
+        const { classes } = props;
         this.testFoo = this.testFoo.bind(this);
+        this.revert = this.revert.bind(this);
     }
+
+
 
     render() {
         // $(document).ready(function() {
         //     mermaid.initialize();
         // });
+        let _this = this;
         return (
+            <div>
             <div className="mermaid" id = "mems">
                 {this.state.config}
             </div>
+                <input type="button" className="btn" value="Back" height="20px" width="70px"/>
+            </div>
+
+
 
         );
     }
+
+
 
     componentDidMount(){
         var element =  ReactDOM.findDOMNode(document.getElementById("mems"));
@@ -38,19 +52,37 @@ class App extends Component {
                 _this.testFoo();
                 $('#mems').removeAttr("data-processed");
                 mermaid.init(undefined, $("#mems"));
+                console.log($(this).text());
+
             });
+
+            // $( ".btn" ).on( "click", function() {
+            //     _this.revert();
+            //     $('#mems').removeAttr("data-processed");
+            //     mermaid.init(undefined, $("#mems"));
+            //
+            //
+            // });
         });
     }
 
+
     testFoo() {
         this.setState({
-            config: test2
+            config: resourceCheck()
+        });
+
+    }
+    revert(){
+        this.setState({
+            config: test
         });
     }
 }
 
 export default App;
 
+var data1;
 
 var  test =
     "sequenceDiagram\n"+
@@ -122,5 +154,28 @@ function onError(error) {
 function acts() {
     /* yay, all good, do something */
     // ReactDOM.findDOMNode(document.getElementById("mems")).innerHTML = test2;
+}
+
+function resourceCheck(){
+    var linkArray = jsonMainService[0].Links;
+    data1 = "sequenceDiagram\n participant "+jsonMainService[0].Name+"\n";
+   for (let i=0;i<jsonMainService[0].Spans.length;i++){
+       data1+= "participant "+jsonMainService[0].Spans[i].name+"\n";
+   }
+
+    for (let i=0;i<jsonMainService[0].Links.length;i++){
+        data1+= jsonMainService[0].Name +"->>+ "+jsonMainService[0].Links[i].to+":"+jsonMainService[0].Links[i].text+"\n";
+        if(!(linkArray[i].hasChildren)){
+            data1+= linkArray[i].to +"-->>- "+jsonMainService[0].Name+":Finish Span\n";
+        }
+    }
+    console.log(data1);
+   return data1;
+}
+
+function drawGraph(){
+    for (let i=0;i<jsonMainService[0].Links.length;i++){
+        data1+= jsonMainService[0].Name +" ->+ "+jsonMainService[0].Links[i].to+"\n";
+    }
 }
 

@@ -15,7 +15,8 @@ code {
 
 
 #root text:hover {
-  fill: #aaaaaa
+  fill: #aaaaaa;
+  cursor: pointer;
 }
 .note rect, .note path {
   fill: #ffff00;
