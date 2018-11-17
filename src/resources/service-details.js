@@ -8,6 +8,7 @@ var jsonMainService = [{
             "start": 1,
             "duration": 3,
             "parent": "Mock services",
+            "hasChildren":false,
             "Links": [{
                 "to": "Mock services",
                 "time": 4,
@@ -19,17 +20,25 @@ var jsonMainService = [{
             "name": "Span 2",
             "start": 6,
             "duration": 2,
-            "parent": "Mock services",
-            "Links":[
+            "parent": "Mock services 2",
+            "hasChildren":true,
+            "Children":[
                 {
-                    "to": "Span 3",
+                    "name": "Span 3",
                     "time": 6,
-                    "text": "Initiate Span-3"
-                },
-                {
-                    "to": "Mock services",
-                    "time": 8,
-                    "text": "Finish span"
+                    "text": "Initiate Span-3",
+                    "parent": "Span 2",
+                    "hasChildren":true,
+                    "Children":[
+                        {
+                            "name": "Span 4",
+                            "time": 6,
+                            "text": "Initiate Span-4",
+                            "parent": "Span 3",
+                            "hasChildren":false,
+                            "Children":[]
+                        }
+                    ]
                 }
             ]
         },
@@ -39,6 +48,7 @@ var jsonMainService = [{
             "start": 6,
             "duration": 1,
             "parent": "Span-2",
+            "hasChildren":false,
             "Links":[{
                 "to": "Span-2",
                 "time": 7,
@@ -57,6 +67,17 @@ var jsonMainService = [{
                 "text": "Finish span"
                 }
             ]
+        },{
+            "name": "Span 5",
+            "start": 6,
+            "duration": 1,
+            "parent": "Span-2",
+            "hasChildren":false,
+            "Links":[{
+                "to": "Span-2",
+                "time": 7,
+                "text": "Finish span"
+            }]
         }
 
     ],
@@ -65,7 +86,20 @@ var jsonMainService = [{
             "to": "Span 1",
             "order": 1,
             "text": "Initiate Span 1",
+            "hasChildren":false
+        },
+
+        {
+            "to": "Span 2",
+            "order": 1,
+            "text": "Initiate Span 2",
             "hasChildren":true
+        },
+        {
+            "to": "Span 5",
+            "order": 1,
+            "text": "Initiate Span 5",
+            "hasChildren":false
         }
         // },
         // {

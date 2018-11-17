@@ -147,6 +147,8 @@ const options = {
     theme: 'simple'
 };
 
+var copyArr =[];
+
 function onError(error) {
     console.log(error);
 }
@@ -157,25 +159,72 @@ function acts() {
 }
 
 function resourceCheck(){
-    var linkArray = jsonMainService[0].Links;
-    data1 = "sequenceDiagram\n participant "+jsonMainService[0].Name+"\n";
+    var spanArray = jsonMainService[0].Spans;
+    data1 = "sequenceDiagram\n participant "+jsonMainService[0].Name+"\n activate "+ jsonMainService[0].Name+"\n";
    for (let i=0;i<jsonMainService[0].Spans.length;i++){
        data1+= "participant "+jsonMainService[0].Spans[i].name+"\n";
    }
 
     for (let i=0;i<jsonMainService[0].Links.length;i++){
         data1+= jsonMainService[0].Name +"->>+ "+jsonMainService[0].Links[i].to+":"+jsonMainService[0].Links[i].text+"\n";
-        if(!(linkArray[i].hasChildren)){
-            data1+= linkArray[i].to +"-->>- "+jsonMainService[0].Name+":Finish Span\n";
+        if(!jsonMainService[0].Links[i].hasChildren){
+            data1+= jsonMainService[0].Links[i].to + " -->>- "+ jsonMainService[0].Name+": Return \n";
+        }
+        else{
+            var spanName = jsonMainService[0].Links[i].to;
+            var index = findJsonIndex(spanArray,spanName);
+            copyArr.push({"from":jsonMainService[0].Links[i].to,"to": jsonMainService[0].Name});
+
+            iterator2(spanArray,index);
         }
     }
+   data1+= "deactivate "+jsonMainService[0].Name+"\n";
+
     console.log(data1);
    return data1;
+
+
 }
 
-function drawGraph(){
-    for (let i=0;i<jsonMainService[0].Links.length;i++){
+function drawReverse(){
+    for (let i=0;i<jsonMainService[0].Links.lengfalseth;i++){
         data1+= jsonMainService[0].Name +" ->+ "+jsonMainService[0].Links[i].to+"\n";
     }
 }
+
+function findJsonIndex(data,val){
+
+    var index = data.findIndex(function(item){
+        return item.name === val
+    });
+
+    return index;
+}
+
+function iterator2(array,i){
+
+    if(!(array[i].hasChildren)){
+        data1+= array[i].name +"-->>- "+array[i].parent+":Finish Span\n";
+
+        copyArr = copyArr.reverse();
+        console.log(copyArr);
+        for (let k =1;k<copyArr.length;k++){
+            data1+= copyArr[k].from +"-->>- "+ copyArr[k].to+":Finish Span\n";
+        }
+    }
+    else {
+        for (let j = 0; j < array[i].Children.length; j++) {
+                data1+= array[i].name  +"->>+ "+array[i].Children[j].name+": Initiate"+array[i].Children[j].name+"\n";
+                var jsonObj = {
+                    "from": array[i].Children[j].name,
+                    "to" : array[i].name
+                };
+                copyArr.push(jsonObj);
+                iterator2(array[i].Children,j);
+        }
+
+    }
+
+}
+
 
