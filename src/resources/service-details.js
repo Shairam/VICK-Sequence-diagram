@@ -9,11 +9,7 @@ var jsonMainService = [{
             "duration": 3,
             "parent": "Mock services",
             "hasChildren":false,
-            "Links": [{
-                "to": "Mock services",
-                "time": 4,
-                "text": "Finish span"
-            }]
+
         },
 
         {
@@ -35,8 +31,17 @@ var jsonMainService = [{
                             "time": 6,
                             "text": "Initiate Span-4",
                             "parent": "Span 3",
-                            "hasChildren":false,
-                            "Children":[]
+                            "hasChildren":true,
+                            "Children":[
+                                {
+                                    "name": "Span 5",
+                                    "start": 6,
+                                    "duration": 1,
+                                    "parent": "Span 4",
+                                    "hasChildren":false,
+                                    "Children":[]
+                                }
+                            ]
                         }
                     ]
                 }
@@ -49,11 +54,6 @@ var jsonMainService = [{
             "duration": 1,
             "parent": "Span-2",
             "hasChildren":false,
-            "Links":[{
-                "to": "Span-2",
-                "time": 7,
-                "text": "Finish span"
-            }]
         },
 
         {
@@ -61,24 +61,8 @@ var jsonMainService = [{
             "start": 10,
             "duration": 2,
             "parent": "Mock Services",
-            "Links":[{
-                "to": "Mock services",
-                "time": 12,
-                "text": "Finish span"
-                }
-            ]
-        },{
-            "name": "Span 5",
-            "start": 6,
-            "duration": 1,
-            "parent": "Span-2",
-            "hasChildren":false,
-            "Links":[{
-                "to": "Span-2",
-                "time": 7,
-                "text": "Finish span"
-            }]
         }
+
 
     ],
     "Links" : [

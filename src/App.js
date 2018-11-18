@@ -7,6 +7,7 @@ import $ from 'jquery';
 //import mermaidAPI from "./mermaidAPI";
 import mermaid, {mermaidAPI} from 'mermaid';
 import jsonMainService from './resources/service-details';
+import cellDetails from './resources/cell-details';
 
 
 class App extends Component {
@@ -14,7 +15,7 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state = {
-            config : test
+            config : testCells()
         }
         const { classes } = props;
         this.testFoo = this.testFoo.bind(this);
@@ -201,30 +202,71 @@ function findJsonIndex(data,val){
     return index;
 }
 
-function iterator2(array,i){
-
-    if(!(array[i].hasChildren)){
-        data1+= array[i].name +"-->>- "+array[i].parent+":Finish Span\n";
-
+function iterator2(array, i) {
+    if (!(array[i].hasChildren)) {
+        data1 += array[i].name + "-->>- " + array[i].parent + ":Finish Span\n";
         copyArr = copyArr.reverse();
         console.log(copyArr);
-        for (let k =1;k<copyArr.length;k++){
-            data1+= copyArr[k].from +"-->>- "+ copyArr[k].to+":Finish Span\n";
+        for (let k = 1; k < copyArr.length; k++) {
+            data1 += copyArr[k].from + "-->>- " + copyArr[k].to + ":Finish Span\n";
         }
     }
     else {
         for (let j = 0; j < array[i].Children.length; j++) {
-                data1+= array[i].name  +"->>+ "+array[i].Children[j].name+": Initiate"+array[i].Children[j].name+"\n";
-                var jsonObj = {
-                    "from": array[i].Children[j].name,
-                    "to" : array[i].name
-                };
-                copyArr.push(jsonObj);
-                iterator2(array[i].Children,j);
+            data1 += array[i].Children[j].parent + "->>+ " + array[i].Children[j].name + ": Initiate" + array[i].Children[j].name + "\n";
+            var jsonObj = {
+                "from": array[i].Children[j].name,
+                "to": array[i].Children[j].parent
+            };
+            copyArr.push(jsonObj);
+            iterator2(array[i].Children, j);
         }
+    }
+}
 
+function iterator3(array) {
+    data1+= array[0].parent + "->> " + array[0].to  + ":"+array[0].text+"\n";
+    if (!(array[0].hasChildren)) {
+       // data1+= array[0].to + "-->> " + array[0].parent  + ": Return \n"
+    }
+    else {
+            iterator3(array[0].Children);
+    }
+}
+
+function testCells() {
+    var cells = cellDetails[0].Cells;
+    console.log(cells);
+    data1 = "sequenceDiagram\n participant " + cellDetails[0].name + "\n activate " + cellDetails[0].name + "\n";
+    for (let i = 0; i < cells.length; i++) {
+        data1 += "participant " + cells[i].name + "\n";
     }
 
+    data1 += cellDetails[0].Paths.parent + "->>+ " + cellDetails[0].Paths.to + ":" + cellDetails[0].Paths.text + "\n";
+
+    if (!cellDetails[0].Paths.hasChildren) {
+        // data1+= cellDetails[0].Paths.to + "-->>- " + cellDetails[0].Paths.parent + ":Return\n";
+    }
+    else {
+        for (let i = 0; i < cellDetails[0].Paths.Children.length; i++) {
+            data1 += cellDetails[0].Paths.Children[i].parent + "->> " + cellDetails[0].Paths.Children[i].to + ":" + cellDetails[0].Paths.Children[i].text + "\n";
+            if ((cellDetails[0].Paths.Children[i].self)) {
+                continue
+            }
+            else if ((!cellDetails[0].Paths.Children[i].hasChildren)) {
+                data1 += cellDetails[0].Paths.Children[i].to + "-->> " + cellDetails[0].Paths.Children[i].parent + ":" + "Return \n";
+            }
+
+            else {
+                iterator3(cellDetails[0].Paths.Children[i].Children);
+            }
+        }
+    }
+    data1 += "deactivate " + cellDetails[0].name + "\n";
+    console.log(data1);
+    return data1;
 }
+
+
 
 
