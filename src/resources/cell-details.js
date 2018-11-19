@@ -51,16 +51,8 @@ export  var cellDetails = [
                                         "parent": "Cell 3",
                                         "to": "Cell 1",
                                         "text": "Service Name 4",
-                                        "hasChildren": true,
-                                        "Children":[
-                                            {
-                                                "parent": "Cell 1",
-                                                "to": "Cell 6",
-                                                "text": "Service Name 1",
-                                                "hasChildren": false,
-                                                "Children":[]
-                                            }
-                                        ]
+                                        "hasChildren": false,
+                                        "Children":[]
                                     }
                                 ]
                             }
