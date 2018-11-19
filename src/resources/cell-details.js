@@ -1,26 +1,20 @@
-var cellDetails = [
+export  var cellDetails = [
     {
 
         "name": "Global Gateway",
         "Cells": [
             {
                 "name": "Cell 1",
-                "start": 1,
-                "duration": 3,
                 "parent": "Global Gateway",
                 "hasChildren": false
             },
             {
                 "name": "Cell 2",
-                "start": 1,
-                "duration": 3,
                 "parent": "Global Gateway",
                 "hasChildren": false
             },
             {
                 "name": "Cell 3",
-                "start": 1,
-                "duration": 3,
                 "parent": "Global Gateway",
                 "hasChildren": false
             }],
@@ -57,8 +51,16 @@ var cellDetails = [
                                         "parent": "Cell 3",
                                         "to": "Cell 1",
                                         "text": "Service Name 4",
-                                        "hasChildren": false,
-                                        "Children":[]
+                                        "hasChildren": true,
+                                        "Children":[
+                                            {
+                                                "parent": "Cell 1",
+                                                "to": "Cell 6",
+                                                "text": "Service Name 1",
+                                                "hasChildren": false,
+                                                "Children":[]
+                                            }
+                                        ]
                                     }
                                 ]
                             }
@@ -69,21 +71,12 @@ var cellDetails = [
                         "to": "Cell 1",
                         "text": "Service Name 5",
                         "hasChildren": false,
+                        "returnTo":"Global Gateway",
                         "self":true,
-                        "Children":[]
-                    },
-                    {
-                        "parent": "Cell 1",
-                        "to": "Global Gateway",
-                        "text": "Final Response",
-                        "hasChildren": false,
-                        "self":false,
-                        "Children":[]
+                        "Children":[],
+                        "deactivate":true,
                     }
                 ]
             }
     }
 ];
-
-
-export default cellDetails;
