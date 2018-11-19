@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import  ReactDOM from "react-dom";
 import './App.css';
 import $ from 'jquery';
-// import mermaid from './mermaid-1';
-//import mermaidAPI from "./mermaidAPI";
 import mermaid, {mermaidAPI} from 'mermaid';
 import {jsonMainService} from './resources/service-details';
 import {cellDetails} from './resources/cell-details';
